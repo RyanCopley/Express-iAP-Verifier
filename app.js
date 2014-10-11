@@ -2,6 +2,7 @@
 var client = new IAPVerifier("blahblah");
 var appBundles = ["com.something.something"];
 
+//The rest is good from here
 var express = require('express');
 var app = express();
 var IAPVerifier = require('iap_verifier');
