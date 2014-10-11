@@ -1,18 +1,26 @@
+//Configure these
+var client = new IAPVerifier("blahblah");
+var appBundles = ["com.something.something"];
+
 var express = require('express');
 var app = express();
 var IAPVerifier = require('iap_verifier');
-
-var client = new IAPVerifier("blahblah");
-
 var bodyParser = require('body-parser')
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use( bodyParser.urlencoded() ); // to support URL-encoded bodies
+app.use( bodyParser.json() );
+app.use( bodyParser.urlencoded() );
 
-app.get('/validate', function(req, res){
+
+app.post('/validate', function(req, res){
 	if (typeof req.body.receipt !== 'undefined'){
-		client.verifyReceipt(req.body.receipt, function(valid, msg, data) {
-			res.json({valid:valid});
-		});
+		var receiptData = req.body.receipt.receipt;
+		var bundleId = req.body.receipt.bundleId;
+		if (appBundles.indexOf(bundleId) != -1){
+			client.verifyReceipt(req.body.receipt, function(valid, msg, data) {
+				res.json({valid:valid});
+			});
+		}else{
+			res.json({valid:false});
+		}
 	}else{
 		res.json({valid:false});
 	}
